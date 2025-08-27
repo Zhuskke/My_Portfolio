@@ -87,13 +87,10 @@ const PortfolioScreen = () => {
             {text}
           </h3>
           <p className="text-yellow-100 opacity-80 mt-3 md:max-w-md text-lg">
-            Creating Innovative, Functional, and User-Friendly Websites for
-            Digital Solutions.
+            Dedicated to building robust APIs, optimizing databases, and
+            powering smooth digital experiences.
           </p>
           <div className="flex gap-4 mt-6">
-            <button className="bg-yellow-400 text-[#00184b] px-7 py-3 rounded-full font-semibold hover:scale-105 transition shadow-xl text-lg">
-              Projects
-            </button>
             <button className="bg-transparent border-2 border-yellow-400 text-yellow-400 px-7 py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-[#00184b] transition shadow-xl text-lg">
               Contact
             </button>
@@ -130,7 +127,51 @@ const PortfolioScreen = () => {
         </div>
       </section>
 
-      
+      {/* --- About Me Section --- */}
+      <section className="relative w-full max-w-7xl mx-auto py-16 px-4 z-10">
+        <div className="flex flex-col md:flex-row items-center gap-12 backdrop-blur-md bg-[#00184b]/40 border border-yellow-400/30 rounded-3xl p-8 md:p-12 shadow-2xl animate-fade-in-up">
+          {/* Left side: Your Photo */}
+          <div className="flex-shrink-0 w-full md:w-1/3 flex justify-center">
+            <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-yellow-400 shadow-lg group">
+              <img
+                src="/img/Profile.jpg" // Placeholder image for your photo
+                alt="My Photo"
+                className="w-full h-full object-cover transition-transform duration-500 transform group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-yellow-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+            </div>
+          </div>
+
+          {/* Right side: About Me Content */}
+          <div className="flex-1 text-center md:text-left space-y-4">
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+              A Little About Me
+            </h2>
+            <p className="text-lg text-yellow-100 opacity-90 leading-relaxed">
+              I'm a <strong>4th-year Computer Engineering student</strong>{" "}
+              driven by a passion for the logical foundation of technology. My
+              academic journey has provided me with a strong background in
+              data structures and algorithms, which I apply to my true
+              passion: backend development. I'm fascinated by how the principles
+              of logic and efficient system design can power complex
+              applications.
+            </p>
+            {/* <p className="text-lg text-yellow-100 opacity-90 leading-relaxed">
+              I specialize in building robust APIs, optimizing database
+              performance, and architecting scalable backend systems. I thrive
+              on solving intricate problems and enjoy the process of writing
+              clean, maintainable code. As I near graduation, I'm eager to apply
+              my skills to real-world challenges and contribute to innovative
+              projects that make a tangible impact.
+            </p> */}
+            <div className="flex justify-center md:justify-start pt-4">
+              <button className="bg-yellow-400 text-[#00184b] font-bold px-8 py-3 rounded-full shadow-lg hover:bg-yellow-300 transition transform hover:-translate-y-1">
+                View My Resume
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
