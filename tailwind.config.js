@@ -9,7 +9,10 @@ export default {
       colors: {
         primary: "#0a174e",
         secondary: "#fee715"
-      }
+      },
+      animation: {
+        "spin-slow": "spin 0.5s linear infinite", // faster shuriken spin
+      },
     },
   },
   plugins: [],

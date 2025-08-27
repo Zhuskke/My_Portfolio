@@ -1,4 +1,3 @@
-// Home.jsx
 import React, { useState } from "react";
 import {
   FaFacebook,
@@ -8,109 +7,130 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { useTypewriter } from "react-simple-typewriter";
+import Lottie from "react-lottie"; // Import Lottie
+import animationData from "../assets/developer-animation.json"; // Adjust this path to your downloaded Lottie JSON
 
 const PortfolioScreen = () => {
   const [text] = useTypewriter({
-    words: ["John Michael De Jesus|Aspiring Web Developer"], // use "|" as separator
+    words: ["Hi! I'm JM"],
     loop: true,
-    typeSpeed: 70,
-    deleteSpeed: 50,
+    typeSpeed: 100,
+    deleteSpeed: 100,
   });
-  const [name, title] = text.split("|");
 
-  // State for mobile menu
   const [isOpen, setIsOpen] = useState(false);
 
+  // Lottie animation options
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-[#00184b] flex flex-col items-center p-4 md:p-6">
+    <div className="relative min-h-screen flex flex-col items-center overflow-hidden text-yellow-400">
+      {/* 🔥 Moving Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#00184b] via-[#002b6f] to-[#00184b] animate-gradient-x"></div>
+      <div className="absolute w-[700px] h-[700px] bg-yellow-400/20 rounded-full blur-3xl top-[-200px] left-[-200px] animate-pulse"></div>
+      <div className="absolute w-[500px] h-[500px] bg-yellow-300/10 rounded-full blur-3xl bottom-[-150px] right-[-150px] animate-bounce-slow"></div>
+
       {/* Navbar */}
-      <nav className="w-full max-w-6xl flex justify-between items-center py-4 px-2 sm:px-3 md:px-4 border border-yellow-400 rounded-md bg-[#00184b] relative">
-        {/* Logo */}
-        <h1 className="text-yellow-400 font-bold text-2xl">My Portfolio</h1>
-
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex gap-6 text-yellow-400 font-semibold">
-          <li className="cursor-pointer hover:underline">Home</li>
-          <li className="cursor-pointer hover:underline">About me</li>
-          <li className="cursor-pointer hover:underline">Skills</li>
-          <li className="cursor-pointer hover:underline">Projects</li>
+      <nav className="w-full max-w-6xl flex justify-between items-center py-4 px-6 backdrop-blur-md bg-[#00184b]/40 border border-yellow-400/30 rounded-2xl shadow-lg mt-4 relative z-10">
+        <h1 className="text-yellow-400 font-extrabold text-2xl">
+          My Portfolio
+        </h1>
+        <ul className="hidden md:flex gap-8 font-semibold">
+          <li className="cursor-pointer hover:text-white transition">Home</li>
+          <li className="cursor-pointer hover:text-white transition">About</li>
+          <li className="cursor-pointer hover:text-white transition">Skills</li>
+          <li className="cursor-pointer hover:text-white transition">
+            Projects
+          </li>
         </ul>
-
-        {/* Desktop Button */}
-        <button className="hidden md:block border border-yellow-400 text-yellow-400 px-4 py-2 rounded-full hover:bg-yellow-400 hover:text-[#00184b] transition text-sm md:text-base">
-          Get in Touch
-        </button>
-
-        {/* Hamburger for mobile */}
         <button
-          className="md:hidden text-yellow-400 text-2xl"
+          className="md:hidden text-yellow-400 text-3xl"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
-
-        {/* Mobile Dropdown */}
-        {isOpen && (
-          <div className="absolute top-full left-0 w-full bg-[#00184b] border-t border-yellow-400 flex flex-col items-center gap-4 py-6 md:hidden z-50">
-            <ul className="flex flex-col gap-4 text-yellow-400 font-semibold text-center">
-              <li className="cursor-pointer hover:underline">Home</li>
-              <li className="cursor-pointer hover:underline">About me</li>
-              <li className="cursor-pointer hover:underline">Skills</li>
-              <li className="cursor-pointer hover:underline">Projects</li>
-            </ul>
-            <button className="border border-yellow-400 text-yellow-400 px-6 py-2 rounded-full hover:bg-yellow-400 hover:text-[#00184b] transition">
-              Get in Touch
-            </button>
-          </div>
-        )}
       </nav>
 
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden absolute top-20 left-0 w-full bg-[#00184b]/90 backdrop-blur-md p-6 rounded-lg z-20">
+          <ul className="flex flex-col gap-6 text-center font-semibold">
+            <li className="cursor-pointer hover:text-white transition">Home</li>
+            <li className="cursor-pointer hover:text-white transition">
+              About
+            </li>
+            <li className="cursor-pointer hover:text-white transition">
+              Skills
+            </li>
+            <li className="cursor-pointer hover:text-white transition">
+              Projects
+            </li>
+          </ul>
+        </div>
+      )}
+
       {/* Hero Section */}
-      <section className="w-full max-w-6xl flex flex-col-reverse md:flex-row justify-between items-center mt-10 md:mt-16 px-2 sm:px-3 md:px-4 gap-10">
-        {/* Text Content */}
-        <div className="text-center md:text-left text-yellow-400 space-y-3 max-w-lg">
-          <p className="text-base md:text-lg">Hi I am</p>
-
-          {/* Typing Effect for Name */}
-          <h2 className="text-2xl md:text-4xl font-bold">{name}</h2>
-          <h3 className="text-lg md:text-2xl font-semibold">{title}</h3>
-
-          <p className="text-sm md:text-base">
-            Welcome to my personal portfolio
+      <section className="flex flex-col md:flex-row items-center md:justify-between text-center md:text-left mt-16 md:mt-24 px-4 relative z-10 max-w-7xl mx-auto py-8">
+        {/* Left Column - Text and Buttons */}
+        <div className="flex flex-col items-center md:items-start space-y-4 md:w-1/2 lg:w-3/5 p-4">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold drop-shadow-lg text-white">
+            Aspiring Backend Developer
+          </h2>
+          <h3 className="text-xl sm:text-2xl md:text-3xl text-purple-300 opacity-90 drop-shadow-md">
+            {text}
+          </h3>
+          <p className="text-yellow-100 opacity-80 mt-3 md:max-w-md text-lg">
+            Creating Innovative, Functional, and User-Friendly Websites for
+            Digital Solutions.
           </p>
-
-          {/* Social Icons */}
-          <div className="flex justify-center md:justify-start gap-4 mt-4">
+          <div className="flex gap-4 mt-6">
+            <button className="bg-yellow-400 text-[#00184b] px-7 py-3 rounded-full font-semibold hover:scale-105 transition shadow-xl text-lg">
+              Projects
+            </button>
+            <button className="bg-transparent border-2 border-yellow-400 text-yellow-400 px-7 py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-[#00184b] transition shadow-xl text-lg">
+              Contact
+            </button>
+          </div>
+          <div className="flex gap-6 mt-8">
             <a
               href="#"
-              className="bg-yellow-400 text-[#00184b] p-3 rounded-full hover:scale-110 transition"
+              className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaFacebook size={20} />
+              <FaFacebook size={28} />
             </a>
             <a
               href="#"
-              className="bg-yellow-400 text-[#00184b] p-3 rounded-full hover:scale-110 transition"
+              className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaEnvelope size={20} />
+              <FaEnvelope size={28} />
             </a>
             <a
               href="#"
-              className="bg-yellow-400 text-[#00184b] p-3 rounded-full hover:scale-110 transition"
+              className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaLinkedin size={20} />
+              <FaLinkedin size={28} />
             </a>
           </div>
         </div>
 
-        {/* Image */}
-        <div className="bg-white w-40 h-40 md:w-56 md:h-56 rounded-full flex items-center justify-center shadow-lg">
-          <img
-            src="https://via.placeholder.com/150"
-            alt="Profile"
-            className="rounded-full w-full h-full object-cover"
+        {/* Right Column - Lottie Animation */}
+        <div className="relative mt-12 md:mt-0 flex justify-center items-center md:w-1/2 lg:w-2/5 p-4">
+          <Lottie
+            options={defaultOptions}
+            height={400} // Adjust height as needed
+            width={400} // Adjust width as needed
           />
         </div>
       </section>
+
+      
     </div>
   );
 };
