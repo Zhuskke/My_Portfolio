@@ -156,7 +156,7 @@ const PortfolioScreen = () => {
             {/* Layer 2: Main photo container with border and shadow */}
             <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-yellow-400 shadow-2xl z-10">
               <img
-                src="https://placehold.co/400x400/00184B/FFFFFF?text=JM" // Placeholder image for your photo
+                src="/img/Profile.jpg" // Placeholder image for your photo
                 alt="Your Photo"
                 className="w-full h-full object-cover transition-transform duration-500 transform hover:scale-110"
               />
