@@ -126,65 +126,56 @@ const PortfolioScreen = () => {
       )}
 
       {/* Hero Section */}
-
-      <section className="flex flex-col md:flex-row items-center md:justify-between text-center md:text-left px-4 relative z-10 max-w-7xl mx-auto py-16 md:py-24">
+      <section className="relative z-10 max-w-7xl mx-auto flex flex-col sm:flex-col md:flex-row items-center md:justify-between py-16 sm:py-20 md:py-32 px-4 sm:px-6 md:px-12">
         {/* Left Column - Text and Buttons */}
-
-        <div className="flex flex-col items-center md:items-start space-y-4 md:w-1/2 lg:w-3/5 p-4">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold drop-shadow-lg text-white">
+        <div className="flex flex-col items-center md:items-start space-y-4 w-full md:w-1/2 lg:w-3/5 mt-8 sm:mt-10 md:mt-0 md:ml-6">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-extrabold drop-shadow-lg text-white text-center md:text-left">
             Aspiring Backend Developer
           </h2>
-
-          <h3 className="text-xl sm:text-2xl md:text-3xl text-purple-300 opacity-90 drop-shadow-md min-h-[2.5rem]">
+          <h3 className="text-lg sm:text-xl md:text-3xl text-purple-300 opacity-90 drop-shadow-md min-h-[2rem] sm:min-h-[2.5rem] text-center md:text-left">
             {text}
           </h3>
-
-          <p className="text-yellow-100 opacity-80 mt-3 md:max-w-md text-lg">
+          <p className="text-yellow-100 opacity-80 mt-3 max-w-sm sm:max-w-md text-base sm:text-lg text-center md:text-left">
             Dedicated to building robust APIs, optimizing databases, and
             powering smooth digital experiences.
           </p>
-
-          <div className="flex gap-4 mt-6">
-            <button className="bg-transparent border-2 border-yellow-400 text-yellow-400 px-7 py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-[#00184b] transition shadow-xl text-lg">
+          <div className="flex gap-4 mt-6 justify-center md:justify-start">
+            <button className="bg-transparent border-2 border-yellow-400 text-yellow-400 px-6 sm:px-7 py-2 sm:py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-[#00184b] transition shadow-xl text-base sm:text-lg">
               Contact
             </button>
           </div>
-
-          <div className="flex gap-6 mt-8">
+          <div className="flex gap-6 mt-6 sm:mt-8 justify-center md:justify-start">
             <a
               href="#"
               className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaFacebook size={28} />
+              <FaFacebook size={24} />
             </a>
-
             <a
               href="#"
               className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaEnvelope size={28} />
+              <FaEnvelope size={24} />
             </a>
-
             <a
               href="#"
               className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaLinkedin size={28} />
+              <FaLinkedin size={24} />
             </a>
           </div>
         </div>
 
         {/* Right Column - Lottie Animation */}
-
-        <div className="relative mt-12 md:mt-0 flex justify-center items-center md:w-1/2 lg:w-2/5 p-4">
+        <div className="relative mt-10 md:mt-0 flex justify-center md:justify-end items-center w-full md:w-1/2 lg:w-2/5 p-2 sm:p-4">
           <Lottie
             options={defaultOptions}
-            height={400} // Adjust height as needed
-            width={400} // Adjust width as needed
+            height={250}
+            width={250}
+            className="sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px]"
           />
         </div>
       </section>
-
       {/* --- About Me Section --- */}
 
       <section className="relative w-full max-w-7xl mx-auto py-16 px-4 z-10 animate-fade-in-up">
