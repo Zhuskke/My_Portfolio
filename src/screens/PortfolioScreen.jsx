@@ -1,46 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  FaFacebook,
-  FaEnvelope,
-  FaLinkedin,
-  FaBars,
-  FaTimes,
-} from "react-icons/fa";
-import { useTypewriter } from "react-simple-typewriter";
-import Lottie from "react-lottie"; // Import Lottie
-import animationData from "../assets/developer-animation.json"; // Adjust this path to your downloaded Lottie JSON
+  SiHtml5,
+  SiCss3,
+  SiJavascript,
+  SiPython,
+  SiDjango,
+  SiNodedotjs,
+  SiExpress,
+  SiReact,
+  SiMongodb,
+} from "react-icons/si";
 
 const PortfolioScreen = () => {
-  const [text] = useTypewriter({
-    words: ["Hi! I'm JM"],
-    loop: true,
-    typeSpeed: 100,
-    deleteSpeed: 100,
-  });
+  const words = ["Hi! I'm JM"];
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentText, setCurrentText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [typingSpeed, setTypingSpeed] = useState(100);
+
+  useEffect(() => {
+    const handleType = () => {
+      const currentWord = words[currentWordIndex];
+      const speed = isDeleting ? 50 : 100;
+
+      setCurrentText((prevText) =>
+        isDeleting
+          ? currentWord.substring(0, prevText.length - 1)
+          : currentWord.substring(0, prevText.length + 1)
+      );
+
+      if (!isDeleting && currentText === currentWord) {
+        setTypingSpeed(1000);
+        setIsDeleting(true);
+      } else if (isDeleting && currentText === "") {
+        setIsDeleting(false);
+        setTypingSpeed(100);
+        setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
+      } else {
+        setTypingSpeed(100);
+      }
+    };
+
+    const timer = setTimeout(handleType, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, typingSpeed, currentWordIndex, words]);
 
   const [isOpen, setIsOpen] = useState(false);
 
   const skillsData = [
-    { name: "HTML", icon: "html5", type: "Language" },
-    { name: "CSS", icon: "css3-alt", type: "Language" },
-    { name: "JavaScript", icon: "js-square", type: "Language" },
-    { name: "Python", icon: "python", type: "Language" },
-    { name: "Django", icon: "django", type: "Framework" },
-    { name: "Node.js", icon: "node-js", type: "Runtime" },
-    { name: "Express.js", icon: "node-js", type: "Framework" }, // Using node-js icon for Express
-    { name: "React", icon: "react", type: "Framework" },
-    { name: "MongoDB", icon: "database", type: "Database" }, // Using a generic database icon
+    { name: "HTML", icon: <SiHtml5 />, type: "Language" },
+    { name: "CSS", icon: <SiCss3 />, type: "Language" },
+    { name: "JavaScript", icon: <SiJavascript />, type: "Language" },
+    { name: "Python", icon: <SiPython />, type: "Language" },
+    { name: "Django", icon: <SiDjango />, type: "Framework" },
+    { name: "Node.js", icon: <SiNodedotjs />, type: "Runtime" },
+    { name: "Express.js", icon: <SiExpress />, type: "Framework" },
+    { name: "React", icon: <SiReact />, type: "Framework" },
+    { name: "MongoDB", icon: <SiMongodb />, type: "Database" },
   ];
-
-  // Lottie animation options
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
 
   return (
     <div className="relative min-h-screen flex flex-col items-center overflow-hidden text-yellow-400">
@@ -52,8 +69,15 @@ const PortfolioScreen = () => {
 
       {/* 🔥 Moving Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#00184b] via-[#002b6f] to-[#00184b] animate-gradient-x"></div>
-      <div className="absolute w-[700px] h-[700px] bg-yellow-400/20 rounded-full blur-3xl top-[-200px] left-[-200px] animate-pulse"></div>
-      <div className="absolute w-[500px] h-[500px] bg-yellow-300/10 rounded-full blur-3xl bottom-[-150px] right-[-150px] animate-bounce-slow"></div>
+
+      {/*
+        FIX: Updated the glowing circles to use responsive units.
+        Instead of fixed pixels, they now use percentage widths (w-3/4)
+        and percentage positioning (top-[-20%], left-[-20%]) on smaller screens.
+        They revert to fixed pixels on "sm" and "md" breakpoints.
+      */}
+      <div className="absolute w-3/4 h-3/4 sm:w-[700px] sm:h-[700px] bg-yellow-400/20 rounded-full blur-3xl top-[-20%] left-[-20%] animate-pulse"></div>
+      <div className="absolute w-3/4 h-3/4 sm:w-[500px] sm:h-[500px] bg-yellow-300/10 rounded-full blur-3xl bottom-[-15%] right-[-15%] animate-bounce-slow"></div>
 
       {/* Navbar */}
       <nav className="fixed top-0 z-50 w-full max-w-7xl flex justify-between items-center py-4 px-6 backdrop-blur-md bg-[#00184b]/40 border border-yellow-400/30 rounded-2xl shadow-lg mt-4">
@@ -72,7 +96,11 @@ const PortfolioScreen = () => {
           className="md:hidden text-yellow-400 text-3xl"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <FaTimes /> : <FaBars />}
+          {isOpen ? (
+            <i className="fas fa-times"></i>
+          ) : (
+            <i className="fas fa-bars"></i>
+          )}
         </button>
       </nav>
 
@@ -102,7 +130,7 @@ const PortfolioScreen = () => {
             Aspiring Backend Developer
           </h2>
           <h3 className="text-xl sm:text-2xl md:text-3xl text-purple-300 opacity-90 drop-shadow-md">
-            {text}
+            {currentText}
           </h3>
           <p className="text-yellow-100 opacity-80 mt-3 md:max-w-md text-lg">
             Dedicated to building robust APIs, optimizing databases, and
@@ -118,30 +146,28 @@ const PortfolioScreen = () => {
               href="#"
               className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaFacebook size={28} />
+              <i className="fa-brands fa-facebook" size={28}></i>
             </a>
             <a
               href="#"
               className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaEnvelope size={28} />
+              <i className="fa-solid fa-envelope" size={28}></i>
             </a>
             <a
               href="#"
               className="text-yellow-400 hover:text-white transition transform hover:scale-125"
             >
-              <FaLinkedin size={28} />
+              <i className="fa-brands fa-linkedin" size={28}></i>
             </a>
           </div>
         </div>
 
-        {/* Right Column - Lottie Animation */}
+        {/* Right Column - Lottie Animation Placeholder */}
         <div className="relative mt-12 md:mt-0 flex justify-center items-center md:w-1/2 lg:w-2/5 p-4">
-          <Lottie
-            options={defaultOptions}
-            height={400} // Adjust height as needed
-            width={400} // Adjust width as needed
-          />
+          <div className="w-[400px] h-[400px] bg-purple-400/20 rounded-full flex items-center justify-center animate-pulse">
+            <i className="fa-solid fa-code text-9xl text-purple-600 opacity-70"></i>
+          </div>
         </div>
       </section>
 
@@ -156,7 +182,7 @@ const PortfolioScreen = () => {
             {/* Layer 2: Main photo container with border and shadow */}
             <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-yellow-400 shadow-2xl z-10">
               <img
-                src="/img/Profile.jpg" // Placeholder image for your photo
+                src="/img/Profile.jpg"
                 alt="Your Photo"
                 className="w-full h-full object-cover transition-transform duration-500 transform hover:scale-110"
               />
@@ -205,8 +231,8 @@ const PortfolioScreen = () => {
               key={index}
               className="bg-[#00184b]/50 backdrop-blur-md rounded-2xl p-6 text-center text-yellow-400 flex flex-col items-center justify-center space-y-3 transform transition-transform duration-300 hover:scale-105 hover:bg-[#002b6f] shadow-lg hover:shadow-2xl hover:shadow-yellow-400/20"
             >
-              <div className="w-16 h-16 flex items-center justify-center p-2 rounded-full border-2 border-yellow-400">
-                <i className={`fab fa-${skill.icon} text-4xl`}></i>
+              <div className="w-16 h-16 flex items-center justify-center p-2 rounded-full border-2 border-yellow-400 text-4xl">
+                {skill.icon}
               </div>
               <h3 className="text-xl font-bold mt-2">{skill.name}</h3>
               <p className="text-xs text-yellow-100 opacity-80">{skill.type}</p>
