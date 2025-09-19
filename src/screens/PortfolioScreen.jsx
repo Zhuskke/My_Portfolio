@@ -1,215 +1,429 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
 import {
-  FaFacebook,
-  FaEnvelope,
-  FaLinkedin,
-  FaBars,
-  FaTimes,
+  AnimatePresence,
+  motion,
+  useTransform,
+  useMotionValue,
+} from "framer-motion";
+import {
+  LucideGithub,
+  LucideLinkedin,
+  LucideMail,
+  Menu, // Replaced FaBars
+} from "lucide-react";
+import * as THREE from "three";
+import Lottie from "lottie-react";
+import developerAnimation from "../assets/developer-animation.json";
+import {
+  FaHtml5,
+  FaCss3Alt,
+  FaJs,
+  FaPython,
+  FaReact,
+  FaNodeJs,
+  FaDatabase,
 } from "react-icons/fa";
-import {
-  SiHtml5,
-  SiCss3,
-  SiJavascript,
-  SiPython,
-  SiDjango,
-  SiNodedotjs,
-  SiExpress,
-  SiReact,
-  SiMongodb,
-} from "react-icons/si";
+import { SiDjango, SiExpress, SiMongodb } from "react-icons/si";
+// Custom hook to simulate the typewriter effect without an external library
+const useTypewriterEffect = (
+  words,
+  loop = true,
+  typeSpeed = 70,
+  deleteSpeed = 50,
+  delaySpeed = 2000
+) => {
+  const [wordIndex, setWordIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [text, setText] = useState("");
 
-import { useTypewriter } from "react-simple-typewriter";
-import Lottie from "react-lottie"; // Import Lottie
-import animationData from "../assets/developer-animation.json"; // Adjust this path to your downloaded Lottie JSON
+  useEffect(() => {
+    let timer;
+    const currentWord = words[wordIndex];
 
-const PortfolioScreen = () => {
-  const [text] = useTypewriter({
-    words: ["Hi! I'm JM"],
+    if (!isDeleting && charIndex < currentWord.length) {
+      timer = setTimeout(() => {
+        setText(currentWord.substring(0, charIndex + 1));
+        setCharIndex(charIndex + 1);
+      }, typeSpeed);
+    } else if (isDeleting && charIndex > 0) {
+      timer = setTimeout(() => {
+        setText(currentWord.substring(0, charIndex - 1));
+        setCharIndex(charIndex - 1);
+      }, deleteSpeed);
+    } else if (!isDeleting && charIndex === currentWord.length) {
+      timer = setTimeout(() => setIsDeleting(true), delaySpeed);
+    } else if (isDeleting && charIndex === 0) {
+      setIsDeleting(false);
+      setWordIndex((prev) => (prev + 1) % words.length);
+    }
 
-    loop: true,
+    return () => clearTimeout(timer);
+  }, [
+    charIndex,
+    isDeleting,
+    wordIndex,
+    words,
+    typeSpeed,
+    deleteSpeed,
+    delaySpeed,
+  ]);
 
-    typeSpeed: 100,
+  return text;
+};
 
-    deleteSpeed: 100,
-  });
-
+const Portfolio = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const text = useTypewriterEffect(["Hi! I'm JM, a Backend Developer."]);
+  const containerRef = useRef();
+
+  // Ref for the About Me card to add tilt effect
+  const aboutRef = useRef();
+  const skillsRef = useRef();
+
+  const handleMouseMove = (event, ref) => {
+    const { clientX, clientY } = event;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const x = (clientX - (left + width / 2)) / (width / 2);
+    const y = (clientY - (top + height / 2)) / (height / 2);
+    ref.current.style.transform = `rotateX(${-y * 10}deg) rotateY(${
+      x * 10
+    }deg)`;
+  };
+
+  const handleMouseLeave = (ref) => {
+    ref.current.style.transform = `rotateX(0deg) rotateY(0deg)`;
+  };
+
+  useEffect(() => {
+    let renderer, camera, scene, particles, mouse;
+    const isMobile = window.innerWidth < 768;
+
+    const init = () => {
+      // Scene setup
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = isMobile ? 5 : 2;
+
+      // Renderer setup
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      containerRef.current.appendChild(renderer.domElement);
+
+      // Mouse tracking
+      mouse = new THREE.Vector2(0, 0);
+
+      // Particles
+      const particleCount = isMobile ? 500 : 2000;
+      const geometry = new THREE.BufferGeometry();
+      const positions = [];
+      const colors = [];
+      const color1 = new THREE.Color(0x38bdf8);
+      const color2 = new THREE.Color(0x60a5fa);
+
+      for (let i = 0; i < particleCount; i++) {
+        // Position
+        const x = (Math.random() - 0.5) * 20;
+        const y = (Math.random() - 0.5) * 20;
+        const z = (Math.random() - 0.5) * 20;
+        positions.push(x, y, z);
+
+        // Color
+        const color = color1.clone().lerp(color2, Math.random());
+        colors.push(color.r, color.g, color.b);
+      }
+
+      geometry.setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(positions, 3)
+      );
+      geometry.setAttribute(
+        "color",
+        new THREE.Float32BufferAttribute(colors, 3)
+      );
+
+      const material = new THREE.PointsMaterial({
+        size: 0.05,
+        vertexColors: true,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+      });
+
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+
+      window.addEventListener("resize", onWindowResize);
+      window.addEventListener("mousemove", onMouseMove);
+    };
+
+    const onWindowResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+
+    const onMouseMove = (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+
+      // Rotate particles
+      particles.rotation.x += 0.0005;
+      particles.rotation.y += 0.0008;
+
+      // Mouse movement interaction
+      camera.position.x += (mouse.x - camera.position.x) * 0.05;
+      camera.position.y += (-mouse.y - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+    };
+
+    if (containerRef.current) {
+      init();
+      animate();
+    }
+
+    return () => {
+      window.removeEventListener("resize", onWindowResize);
+      window.removeEventListener("mousemove", onMouseMove);
+      if (renderer && containerRef.current) {
+        containerRef.current.removeChild(renderer.domElement);
+        renderer.dispose();
+      }
+    };
+  }, []);
 
   const skillsData = [
-    { name: "HTML", icon: <SiHtml5 />, type: "Language" },
-    { name: "CSS", icon: <SiCss3 />, type: "Language" },
-    { name: "JavaScript", icon: <SiJavascript />, type: "Language" },
-    { name: "Python", icon: <SiPython />, type: "Language" },
-    { name: "Django", icon: <SiDjango />, type: "Framework" },
-    { name: "Node.js", icon: <SiNodedotjs />, type: "Runtime" },
-    { name: "Express.js", icon: <SiExpress />, type: "Framework" },
-    { name: "React", icon: <SiReact />, type: "Framework" },
-    { name: "MongoDB", icon: <SiMongodb />, type: "Database" },
+    { name: "HTML5", icon: <FaHtml5 />, type: "Languages" },
+    { name: "CSS3", icon: <FaCss3Alt />, type: "Languages" },
+    { name: "JavaScript", icon: <FaJs />, type: "Languages" },
+    { name: "Python", icon: <FaPython />, type: "Languages" },
+    { name: "Django", icon: <SiDjango />, type: "Frameworks" },
+    { name: "React", icon: <FaReact />, type: "Frameworks" },
+    { name: "Node.js", icon: <FaNodeJs />, type: "Runtimes" },
+    { name: "Express.js", icon: <SiExpress />, type: "Frameworks" },
+    { name: "MongoDB", icon: <SiMongodb />, type: "Databases" },
   ];
 
-  // Lottie animation options
+  const groupedSkills = skillsData.reduce((acc, skill) => {
+    (acc[skill.type] = acc[skill.type] || []).push(skill);
+    return acc;
+  }, {});
 
-  const defaultOptions = {
-    loop: true,
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  };
 
-    autoplay: true,
+  const stagger = {
+    visible: { transition: { staggerChildren: 0.2 } },
+  };
 
-    animationData: animationData,
-
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, type: "spring", stiffness: 100 },
     },
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center overflow-hidden text-yellow-400">
-      {/* Include Font Awesome for real icons */}
-
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      />
-
-      {/* 🔥 Moving Gradient Background */}
-
-      <div className="absolute inset-0 bg-gradient-to-r from-[#00184b] via-[#002b6f] to-[#00184b] animate-gradient-x"></div>
-
-      <div className="absolute w-[700px] h-[700px] bg-yellow-400/20 rounded-full blur-3xl top-[-200px] left-[-200px] animate-pulse"></div>
-
-      <div className="absolute w-[500px] h-[500px] bg-yellow-300/10 rounded-full blur-3xl bottom-[-150px] right-[-150px] animate-bounce-slow"></div>
+    <div className="relative min-h-screen flex flex-col items-center font-sans text-sky-400 bg-indigo-950 overflow-hidden">
+      {/* Three.js Background Canvas */}
+      <div ref={containerRef} className="fixed inset-0 z-0 opacity-80" />
 
       {/* Navbar */}
-
-      <nav className="fixed top-0 z-50 w-full max-w-7xl flex justify-between items-center py-4 px-6 backdrop-blur-md bg-[#00184b]/40 border border-yellow-400/30 rounded-2xl shadow-lg mt-4">
-        <h1 className="text-yellow-400 font-extrabold text-2xl">
-          My Portfolio
-        </h1>
-
-        <ul className="hidden md:flex gap-8 font-semibold">
-          <li className="cursor-pointer hover:text-white transition">Home</li>
-          <li className="cursor-pointer hover:text-white transition">About</li>
-          <li className="cursor-pointer hover:text-white transition">Skills</li>
-          <li className="cursor-pointer hover:text-white transition">
-            Projects
-          </li>
+      <nav className="fixed top-4 z-50 w-full max-w-7xl flex justify-between items-center py-4 px-6 bg-indigo-900/40 backdrop-blur-md rounded-2xl shadow-xl border border-sky-400/20 mx-4">
+        <motion.h1
+          className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl font-inter"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          JM <span className="text-sky-400">Portfolio</span>
+        </motion.h1>
+        <ul className="hidden md:flex gap-8 font-semibold text-lg">
+          {["Home", "About", "Skills", "Contact"].map((item, index) => (
+            <motion.li
+              key={item}
+              className="cursor-pointer hover:text-white transition-colors duration-300"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + index * 0.1 }}
+            >
+              <a href={`#${item.toLowerCase()}`} className="py-2">
+                {item}
+              </a>
+            </motion.li>
+          ))}
         </ul>
-
         <button
-          className="md:hidden text-yellow-400 text-3xl"
+          className="md:hidden text-sky-400 text-3xl"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <FaTimes /> : <FaBars />}
+          {isOpen ? <X /> : <Menu />}
         </button>
       </nav>
 
       {/* Mobile Menu */}
-
-      {isOpen && (
-        <div className="md:hidden absolute top-20 left-0 w-full bg-[#00184b]/90 backdrop-blur-md p-6 rounded-lg z-20">
-          <ul className="flex flex-col gap-6 text-center font-semibold">
-            <li className="cursor-pointer hover:text-white transition">Home</li>
-
-            <li className="cursor-pointer hover:text-white transition">
-              About
-            </li>
-
-            <li className="cursor-pointer hover:text-white transition">
-              Skills
-            </li>
-
-            <li className="cursor-pointer hover:text-white transition">
-              Projects
-            </li>
-          </ul>
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="md:hidden fixed top-20 left-0 w-full z-40 bg-indigo-950/90 backdrop-blur-lg p-6 rounded-b-3xl shadow-2xl"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ul className="flex flex-col gap-6 text-center font-semibold text-xl">
+              {["Home", "About", "Skills", "Contact"].map((item) => (
+                <li
+                  key={item}
+                  className="cursor-pointer hover:text-white transition-colors duration-300"
+                >
+                  <a
+                    href={`#${item.toLowerCase()}`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Hero Section */}
-      <section className="relative z-10 max-w-7xl mx-auto flex flex-col sm:flex-col md:flex-row items-center md:justify-between py-16 sm:py-20 md:py-32 px-4 sm:px-6 md:px-12">
+      <motion.section
+        id="home"
+        className="relative z-10 w-full max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between py-24 sm:py-32 md:py-48 px-4 md:px-12"
+        variants={stagger}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Left Column - Text and Buttons */}
-        <div className="flex flex-col items-center md:items-start space-y-4 w-full md:w-1/2 lg:w-3/5 mt-8 sm:mt-10 md:mt-0 md:ml-6">
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-extrabold drop-shadow-lg text-white text-center md:text-left">
-            Aspiring Backend Developer
-          </h2>
-          <h3 className="text-lg sm:text-xl md:text-3xl text-purple-300 opacity-90 drop-shadow-md min-h-[2rem] sm:min-h-[2.5rem] text-center md:text-left">
-            {text}
-          </h3>
-          <p className="text-yellow-100 opacity-80 mt-3 max-w-sm sm:max-w-md text-base sm:text-lg text-center md:text-left">
+        <motion.div
+          className="flex flex-col items-center md:items-start space-y-6 md:space-y-8 w-full md:w-1/2 lg:w-3/5 text-center md:text-left mt-10 md:mt-0"
+          variants={fadeIn}
+        >
+          <motion.h2
+            variants={fadeIn}
+            className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight text-white drop-shadow-lg"
+          >
+            Backend Developer
+          </motion.h2>
+          <motion.h3
+            variants={fadeIn}
+            className="text-xl sm:text-2xl md:text-3xl text-sky-300 opacity-90 min-h-[3rem] font-medium"
+          >
+            <span className="font-semibold">{text}</span>
+          </motion.h3>
+          <motion.p
+            variants={fadeIn}
+            className="text-indigo-100 opacity-80 mt-2 max-w-lg text-lg"
+          >
             Dedicated to building robust APIs, optimizing databases, and
-            powering smooth digital experiences.
-          </p>
-          <div className="flex gap-4 mt-6 justify-center md:justify-start">
-            <button className="bg-transparent border-2 border-yellow-400 text-yellow-400 px-6 sm:px-7 py-2 sm:py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-[#00184b] transition shadow-xl text-base sm:text-lg">
-              Contact
-            </button>
-          </div>
-          <div className="flex gap-6 mt-6 sm:mt-8 justify-center md:justify-start">
-            <a
-              href="#"
-              className="text-yellow-400 hover:text-white transition transform hover:scale-125"
+            powering seamless digital experiences.
+          </motion.p>
+          <motion.div variants={fadeIn} className="flex gap-4 mt-6">
+            <motion.a
+              href="#contact"
+              className="px-6 py-3 rounded-full text-lg font-semibold bg-sky-400 text-indigo-950 shadow-lg hover:shadow-2xl hover:bg-sky-300 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <FaFacebook size={24} />
-            </a>
-            <a
+              Contact Me
+            </motion.a>
+          </motion.div>
+          <motion.div variants={fadeIn} className="flex gap-6 mt-8">
+            <motion.a
               href="#"
-              className="text-yellow-400 hover:text-white transition transform hover:scale-125"
+              className="text-sky-400 hover:text-white transition-colors"
+              whileHover={{ scale: 1.2, rotate: 5 }}
             >
-              <FaEnvelope size={24} />
-            </a>
-            <a
+              <LucideLinkedin size={28} />
+            </motion.a>
+            <motion.a
               href="#"
-              className="text-yellow-400 hover:text-white transition transform hover:scale-125"
+              className="text-sky-400 hover:text-white transition-colors"
+              whileHover={{ scale: 1.2, rotate: 5 }}
             >
-              <FaLinkedin size={24} />
-            </a>
-          </div>
-        </div>
+              <LucideMail size={28} />
+            </motion.a>
+            <motion.a
+              href="#"
+              className="text-sky-400 hover:text-white transition-colors"
+              whileHover={{ scale: 1.2, rotate: 5 }}
+            >
+              <LucideGithub size={28} />
+            </motion.a>
+          </motion.div>
+        </motion.div>
 
-        {/* Right Column - Lottie Animation */}
-        <div className="relative mt-10 md:mt-0 flex justify-center md:justify-end items-center w-full md:w-1/2 lg:w-2/5 p-2 sm:p-4">
+        {/* Right Column - SVG Animation */}
+        <motion.div
+          className="relative mt-10 md:mt-0 w-full md:w-1/2 lg:w-2/5 p-4 flex justify-center md:justify-end"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, delay: 0.5 }}
+        >
           <Lottie
-            options={defaultOptions}
-            height={250}
-            width={250}
-            className="sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px]"
+            animationData={developerAnimation}
+            loop={true}
+            className="w-full h-auto max-w-xs md:max-w-md lg:max-w-lg"
           />
-        </div>
-      </section>
-      {/* --- About Me Section --- */}
+        </motion.div>
+      </motion.section>
 
-      <section className="relative w-full max-w-7xl mx-auto py-16 px-4 z-10 animate-fade-in-up">
-        {/* New floating design with subtle glow animation */}
-
-        <div className="w-full h-full flex flex-col md:flex-row items-center gap-12 backdrop-blur-md bg-[#00184b]/40 rounded-3xl p-8 md:p-12 shadow-2xl shadow-yellow-400/20 animate-glow-border">
-          {/* Left side: Your Photo with new dynamic design */}
-
-          <div className="relative flex-shrink-0 w-full md:w-1/3 flex justify-center">
-            {/* Layer 1: Blurred glowing circle */}
-
-            <div className="absolute w-[180px] h-[180px] sm:w-[240px] sm:h-[240px] rounded-full bg-yellow-400/20 blur-3xl z-0 transition-transform duration-500"></div>
-
-            {/* Layer 2: Main photo container with border and shadow */}
-
-            <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-yellow-400 shadow-2xl z-10">
+      {/* About Me Section */}
+      <motion.section
+        id="about"
+        className="relative z-10 w-full max-w-7xl mx-auto py-16 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={cardVariants}
+      >
+        <motion.div
+          ref={aboutRef}
+          className="flex flex-col md:flex-row items-center gap-8 md:gap-12 bg-indigo-900/40 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border border-sky-400/20"
+          onMouseMove={(e) => handleMouseMove(e, aboutRef)}
+          onMouseLeave={() => handleMouseLeave(aboutRef)}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          {/* Photo container */}
+          <motion.div
+            className="relative flex-shrink-0 w-full md:w-1/3 flex justify-center"
+            variants={fadeIn}
+          >
+            <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-sky-400 shadow-xl">
               <img
-                src="/img/Profile.jpg" // Placeholder image for your photo
-                alt="Your Photo"
+                src="img/Profile.jpg"
+                alt="My profile"
                 className="w-full h-full object-cover transition-transform duration-500 transform hover:scale-110"
               />
-
-              <div className="absolute inset-0 bg-yellow-400 opacity-0 hover:opacity-10 transition-opacity duration-500"></div>
             </div>
-          </div>
-
-          {/* Right side: About Me Content */}
-
-          <div className="flex-1 text-center md:text-left space-y-4 md:space-y-6">
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+          </motion.div>
+          {/* About Me Content */}
+          <motion.div
+            className="flex-1 text-center md:text-left space-y-4 md:space-y-6"
+            variants={fadeIn}
+          >
+            <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
               A Little About Me
             </h2>
-
-            <p className="text-lg text-yellow-100 opacity-90 leading-relaxed">
+            <p className="text-lg text-indigo-100 leading-relaxed opacity-90">
               I'm a <strong>4th-year Computer Engineering student</strong>{" "}
               driven by a passion for the logical foundation of technology. My
               academic journey has provided me with a strong background in
@@ -218,8 +432,7 @@ const PortfolioScreen = () => {
               of logic and efficient system design can power complex
               applications.
             </p>
-
-            <p className="text-lg text-yellow-100 opacity-90 leading-relaxed">
+            <p className="text-lg text-indigo-100 leading-relaxed opacity-90">
               I specialize in building robust APIs, optimizing database
               performance, and architecting scalable backend systems. I thrive
               on solving intricate problems and enjoy the process of writing
@@ -227,40 +440,128 @@ const PortfolioScreen = () => {
               my skills to real-world challenges and contribute to innovative
               projects that make a tangible impact.
             </p>
-
             <div className="flex justify-center md:justify-start pt-4">
-              <button className="bg-yellow-400 text-[#00184b] font-bold px-8 py-3 rounded-full shadow-lg hover:bg-yellow-300 transition transform hover:-translate-y-1">
+              <motion.button
+                className="bg-sky-400 text-indigo-950 font-bold px-8 py-3 rounded-full shadow-lg hover:bg-sky-300 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 View My Resume
-              </button>
+              </motion.button>
             </div>
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
-      <section className="relative w-full max-w-7xl mx-auto py-16 px-4 z-10 animate-fade-in-up">
-        <h2 className="text-center text-4xl sm:text-5xl font-extrabold text-white mb-12">
+      {/* My Skills Section */}
+      <motion.section
+        id="skills"
+        className="relative z-10 w-full max-w-7xl mx-auto py-16 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={stagger}
+      >
+        <h2 className="text-center text-4xl sm:text-5xl font-bold text-white mb-12">
           My Skills
         </h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {skillsData.map((skill, index) => (
-            <div
-              key={index}
-              className="bg-[#00184b]/50 backdrop-blur-md rounded-2xl p-6 text-center text-yellow-400 flex flex-col items-center justify-center space-y-3 transform transition-transform duration-300 hover:scale-105 hover:bg-[#002b6f] shadow-lg hover:shadow-2xl hover:shadow-yellow-400/20"
-            >
-              <div className="w-16 h-16 flex items-center justify-center p-2 rounded-full border-2 border-yellow-400 text-4xl">
-                {skill.icon}
+        <div
+          ref={skillsRef}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6"
+          onMouseMove={(e) => handleMouseMove(e, skillsRef)}
+          onMouseLeave={() => handleMouseLeave(skillsRef)}
+          style={{ perspective: 1000, transition: "transform 0.5s ease-out" }}
+        >
+          {Object.entries(groupedSkills).map(([type, skills], index) => (
+            <React.Fragment key={index}>
+              <div className="col-span-full">
+                <h3 className="text-3xl font-semibold text-white mt-4 mb-6 text-center">
+                  {type}
+                </h3>
               </div>
-
-              <h3 className="text-xl font-bold mt-2">{skill.name}</h3>
-
-              <p className="text-xs text-yellow-100 opacity-80">{skill.type}</p>
-            </div>
+              {skills.map((skill, skillIndex) => (
+                <motion.div
+                  key={skillIndex}
+                  className="bg-indigo-900/50 backdrop-blur-md rounded-2xl p-6 text-center text-sky-400 flex flex-col items-center justify-center space-y-3 shadow-lg border border-sky-400/20"
+                  whileHover={{
+                    y: -5,
+                    scale: 1.05,
+                    boxShadow: "0 10px 15px -3px rgb(56 189 248 / 0.3)",
+                  }}
+                  transition={{ duration: 0.2 }}
+                  variants={cardVariants}
+                >
+                  <motion.div
+                    className="w-16 h-16 flex items-center justify-center text-5xl"
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      repeat: Infinity,
+                      ease: "linear",
+                      duration: 20,
+                    }}
+                  >
+                    {skill.icon}
+                  </motion.div>
+                  <h4 className="text-xl font-bold text-white">{skill.name}</h4>
+                </motion.div>
+              ))}
+            </React.Fragment>
           ))}
         </div>
-      </section>
+      </motion.section>
+
+      {/* Contact Section */}
+      <motion.section
+        id="contact"
+        className="relative z-10 w-full max-w-7xl mx-auto py-16 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={fadeIn}
+      >
+        <div className="flex flex-col items-center gap-8 md:gap-12 bg-indigo-900/40 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border border-sky-400/20">
+          <h2 className="text-center text-4xl sm:text-5xl font-bold text-white leading-tight">
+            Get In Touch
+          </h2>
+          <p className="text-lg text-center text-indigo-100 leading-relaxed opacity-90 max-w-2xl">
+            I'm always open to new opportunities and collaborations. Feel free
+            to reach out via email or connect with me on social media.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 mt-4">
+            <motion.a
+              href="mailto:your.email@example.com"
+              className="px-6 py-3 rounded-full text-lg font-semibold bg-sky-400 text-indigo-950 shadow-lg hover:shadow-2xl hover:bg-sky-300 transition-all duration-300 flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <LucideMail size={24} /> Email Me
+            </motion.a>
+            <motion.a
+              href="#"
+              className="px-6 py-3 rounded-full text-lg font-semibold bg-indigo-950 text-sky-400 border border-sky-400 shadow-lg hover:shadow-2xl hover:bg-sky-400 hover:text-indigo-950 transition-all duration-300 flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <LucideLinkedin size={24} /> LinkedIn
+            </motion.a>
+            <motion.a
+              href="#"
+              className="px-6 py-3 rounded-full text-lg font-semibold bg-indigo-950 text-sky-400 border border-sky-400 shadow-lg hover:shadow-2xl hover:bg-sky-400 hover:text-indigo-950 transition-all duration-300 flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <LucideGithub size={24} /> GitHub
+            </motion.a>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Footer */}
+      <footer className="w-full text-center py-6 text-indigo-200 text-sm opacity-70">
+        &copy; {new Date().getFullYear()} JM. All Rights Reserved.
+      </footer>
     </div>
   );
 };
 
-export default PortfolioScreen;
+export default Portfolio;

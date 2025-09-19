@@ -2,43 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes gradient {
-  0% {
+@keyframes gradient-x {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
     background-position: 100% 50%;
   }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes gradient-x {
-  0%,
-  100% {
-    background-position: left center;
-  }
-  50% {
-    background-position: right center;
-  }
 }
 .animate-gradient-x {
+  background-image: linear-gradient(
+    90deg,
+    #00184b 0%,
+    #002b6f 50%,
+    #00184b 100%
+  );
   background-size: 200% 200%;
-  animation: gradient-x 10s ease infinite;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  animation: gradient-x 12s ease infinite;
 }
 
 @keyframes bounce-slow {
@@ -52,4 +35,39 @@
 }
 .animate-bounce-slow {
   animation: bounce-slow 8s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
+
+@keyframes glow-border {
+  0% {
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.15);
+  }
+}
+.animate-glow-border {
+  animation: glow-border 4s ease-in-out infinite;
+}
+
+/* small utility to make circular icon badges clickable without layout shift */
+.skill-badge {
+  min-width: 64px;
+  min-height: 64px;
 }
