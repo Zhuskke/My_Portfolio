@@ -1,11 +1,12 @@
 import { useState } from "react";
-import BackgroundCanvas from "../components/BackgroundCanvas";
-import Navbar from "../components/Navbar";
+import BackgroundCanvas from "../components/backgroundCanvas";
+import Navbar from "../components/navbar";
 import MobileMenu from "../components/MobileMenu";
 import Hero from "../components/Hero";
 import About from "../components/About";
 import Skills from "../components/Skills";
 import Footer from "../components/Footer";
+import Projects from "../components/Projects";
 
 const Portfolio = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ const Portfolio = () => {
       <Hero />
       <About />
       <Skills />
+      <Projects />
       <Footer />
     </div>
   );
