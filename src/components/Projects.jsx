@@ -7,15 +7,20 @@ const Projects = () => {
 
   const projectsData = [
     {
-      title: "Recipe Sharing Platform",
+      title: "Porthub",
       description:
-        "A full-stack app where users can discover, create, and share recipes. Features real-time updates and a modern UI.",
+        "Porthub is a portfolio-making website that helps you design and showcase your work with ease. Create stunning layouts using shapes, icons, and customizable templates to make your portfolio truly unique.",
       images: [
-        "/img/projects/recipe1.png",
-        "/img/projects/recipe2.png",
-        "/img/projects/recipe3.png",
+        "/img/Porthub/Porthub1.png",
+        "/img/Porthub/Porthub2.png",
+        "/img/Porthub/Porthub3.png",
+        "/img/Porthub/Porthub4.png",
+        "/img/Porthub/Porthub5.png",
+        "/img/Porthub/Porthub6.png",
+        "/img/Porthub/Porthub7.png",
+        "/img/Porthub/Porthub8.png",
       ],
-      tech: ["React", "Firebase", "Tailwind", "Framer Motion"],
+      tech: ["React", "Firebase"],
     },
     {
       title: "AI Waiter Robot",
