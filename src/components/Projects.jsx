@@ -23,11 +23,15 @@ const Projects = () => {
       tech: ["React", "Firebase"],
     },
     {
-      title: "AI Waiter Robot",
+      title: "Record",
       description:
-        "An AI-powered autonomous waiter robot for restaurants, with facial recognition and QR authentication.",
-      images: ["/img/projects/robot1.png", "/img/projects/robot2.png"],
-      tech: ["Python", "OpenCV", "TensorFlow", "Raspberry Pi"],
+        "This note-taking website allows users to quickly create, organize, and manage their notes in one place. With a simple and modern interface, users can add titles and content, keep track of important ideas, and stay productive anytime.",
+      images: [
+        "/img/Record/Record1.png",
+        "/img/Record/Record2.png",
+        "/img/Record/Record3.png",
+      ],
+      tech: ["MongoDB", "Express", "React", "Node", "Tailwind", "DaisyUI"],
     },
     {
       title: "Battle Bot",
