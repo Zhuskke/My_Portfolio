@@ -1,45 +1,37 @@
-import { FaBars, FaTimes } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 const Navbar = ({ isOpen, setIsOpen }) => {
   return (
-    <nav className="fixed top-4 z-50 w-[92%] max-w-7xl mx-auto flex justify-between items-center px-6 py-3 rounded-2xl bg-[#00184b]/30 backdrop-blur-lg border border-yellow-400/20 shadow-lg">
-      <h1 className="text-yellow-400 font-extrabold text-xl sm:text-2xl">
-        JM.dev
-      </h1>
-      <ul className="hidden md:flex gap-8 text-yellow-100 font-medium">
-        <li>
-          <a className="hover:text-yellow-400 transition" href="#home">
-            Home
-          </a>
-        </li>
-        <li>
-          <a className="hover:text-yellow-400 transition" href="#about">
-            About
-          </a>
-        </li>
-        <li>
-          <a className="hover:text-yellow-400 transition" href="#skills">
-            Skills
-          </a>
-        </li>
-        <li>
-          <a className="hover:text-yellow-400 transition" href="#projects">
-            Projects
-          </a>
-        </li>
-        <li>
-          <a className="hover:text-yellow-400 transition" href="#contact">
-            Contact
-          </a>
-        </li>
-      </ul>
-
-      <button
-        className="md:hidden text-yellow-400 text-2xl"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle menu"
+    <nav className="fixed top-4 z-50 w-full max-w-7xl flex justify-between items-center py-4 px-6 bg-indigo-900/40 backdrop-blur-md rounded-2xl shadow-xl border border-sky-400/20 mx-4">
+      <motion.h1
+        className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl font-inter"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
       >
-        {isOpen ? <FaTimes /> : <FaBars />}
+        JM <span className="text-sky-400">Portfolio</span>
+      </motion.h1>
+      <ul className="hidden md:flex gap-8 font-semibold text-lg">
+        {["Home", "About", "Skills", "Contact"].map((item, index) => (
+          <motion.li
+            key={item}
+            className="cursor-pointer hover:text-white transition-colors duration-300"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + index * 0.1 }}
+          >
+            <a href={`#${item.toLowerCase()}`} className="py-2">
+              {item}
+            </a>
+          </motion.li>
+        ))}
+      </ul>
+      <button
+        className="md:hidden text-sky-400 text-3xl"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <X /> : <Menu />}
       </button>
     </nav>
   );

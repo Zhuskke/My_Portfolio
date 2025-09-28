@@ -1,63 +1,102 @@
-import { FaFacebook, FaEnvelope, FaLinkedin } from "react-icons/fa";
-import Lottie from "react-lottie";
-const Hero = ({ text, defaultOptions }) => {
+import { motion } from "framer-motion";
+import { LucideLinkedin, LucideMail, LucideGithub } from "lucide-react";
+import Lottie from "lottie-react";
+import developerAnimation from "../assets/developer-animation.json";
+import useTypewriterEffect from "../hooks/useTypewriterEffect";
+
+const Hero = () => {
+  const text = useTypewriterEffect(["Hi! I'm JM, a Backend Developer."]);
+
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  };
+
+  const stagger = {
+    visible: { transition: { staggerChildren: 0.2 } },
+  };
+
   return (
-    <section
+    <motion.section
       id="home"
-      className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center md:justify-between py-16 sm:py-20 md:py-32 px-4 sm:px-6 md:px-12"
+      className="relative z-10 w-full max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between py-24 sm:py-32 md:py-48 px-4 md:px-12"
+      variants={stagger}
+      initial="hidden"
+      animate="visible"
     >
-      <div className="flex flex-col items-center md:items-start space-y-4 w-full md:w-1/2 lg:w-3/5 mt-8 md:mt-0 md:ml-6">
-        <h2 className="text-3xl sm:text-4xl md:text-6xl font-extrabold drop-shadow-lg text-white text-center md:text-left">
-          Aspiring Backend Developer
-        </h2>
-        <h3 className="text-lg sm:text-xl md:text-3xl text-purple-300 opacity-90 drop-shadow-md min-h-[2rem] sm:min-h-[2.5rem] text-center md:text-left">
-          {text}
-        </h3>
-        <p className="text-yellow-100 opacity-80 mt-3 max-w-sm sm:max-w-md text-base sm:text-lg text-center md:text-left">
+      {/* Left Column */}
+      <motion.div
+        className="flex flex-col items-center md:items-start space-y-6 md:space-y-8 w-full md:w-1/2 lg:w-3/5 text-center md:text-left mt-10 md:mt-0"
+        variants={fadeIn}
+      >
+        <motion.h2
+          variants={fadeIn}
+          className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight text-white drop-shadow-lg"
+        >
+          Backend Developer
+        </motion.h2>
+        <motion.h3
+          variants={fadeIn}
+          className="text-xl sm:text-2xl md:text-3xl text-sky-300 opacity-90 min-h-[3rem] font-medium"
+        >
+          <span className="font-semibold">{text}</span>
+        </motion.h3>
+        <motion.p
+          variants={fadeIn}
+          className="text-indigo-100 opacity-80 mt-2 max-w-lg text-lg"
+        >
           Dedicated to building robust APIs, optimizing databases, and powering
-          smooth digital experiences.
-        </p>
-
-        <div className="flex gap-4 mt-6 justify-center md:justify-start">
-          <a
+          seamless digital experiences.
+        </motion.p>
+        <motion.div variants={fadeIn} className="flex gap-4 mt-6">
+          <motion.a
             href="#contact"
-            className="inline-block bg-transparent border-2 border-yellow-400 text-yellow-400 px-6 sm:px-7 py-2 sm:py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-[#00184b] transition shadow-xl text-base sm:text-lg"
+            className="px-6 py-3 rounded-full text-lg font-semibold bg-sky-400 text-indigo-950 shadow-lg hover:shadow-2xl hover:bg-sky-300 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            Contact
-          </a>
-        </div>
+            Contact Me
+          </motion.a>
+        </motion.div>
+        <motion.div variants={fadeIn} className="flex gap-6 mt-8">
+          <motion.a
+            href="#"
+            className="text-sky-400 hover:text-white"
+            whileHover={{ scale: 1.2, rotate: 5 }}
+          >
+            <LucideLinkedin size={28} />
+          </motion.a>
+          <motion.a
+            href="#"
+            className="text-sky-400 hover:text-white"
+            whileHover={{ scale: 1.2, rotate: 5 }}
+          >
+            <LucideMail size={28} />
+          </motion.a>
+          <motion.a
+            href="#"
+            className="text-sky-400 hover:text-white"
+            whileHover={{ scale: 1.2, rotate: 5 }}
+          >
+            <LucideGithub size={28} />
+          </motion.a>
+        </motion.div>
+      </motion.div>
 
-        <div className="flex gap-6 mt-6 sm:mt-8 justify-center md:justify-start">
-          <a
-            href="#"
-            className="text-yellow-400 hover:text-white transition transform hover:scale-125"
-          >
-            <FaFacebook size={24} />
-          </a>
-          <a
-            href="#"
-            className="text-yellow-400 hover:text-white transition transform hover:scale-125"
-          >
-            <FaEnvelope size={24} />
-          </a>
-          <a
-            href="#"
-            className="text-yellow-400 hover:text-white transition transform hover:scale-125"
-          >
-            <FaLinkedin size={24} />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative mt-10 md:mt-0 flex justify-center md:justify-end items-center w-full md:w-1/2 lg:w-2/5 p-2 sm:p-4">
+      {/* Right Column */}
+      <motion.div
+        className="relative mt-10 md:mt-0 w-full md:w-1/2 lg:w-2/5 p-4 flex justify-center md:justify-end"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, delay: 0.5 }}
+      >
         <Lottie
-          options={defaultOptions}
-          height={300}
-          width={300}
-          className="sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px]"
+          animationData={developerAnimation}
+          loop={true}
+          className="w-full h-auto max-w-xs md:max-w-md lg:max-w-lg"
         />
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 
