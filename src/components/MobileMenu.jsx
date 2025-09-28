@@ -12,7 +12,7 @@ const MobileMenu = ({ isOpen, setIsOpen }) => {
           transition={{ duration: 0.3 }}
         >
           <ul className="flex flex-col gap-6 text-center font-semibold text-xl">
-            {["Home", "About", "Skills", "Contact"].map((item) => (
+            {["About", "Skills", "Contact"].map((item) => (
               <li
                 key={item}
                 className="cursor-pointer hover:text-white transition-colors duration-300"

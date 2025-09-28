@@ -10,10 +10,12 @@ const Navbar = ({ isOpen, setIsOpen }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        JM <span className="text-sky-400">Portfolio</span>
+        <a href="#home">
+          JM <span className="text-sky-400">Portfolio</span>
+        </a>
       </motion.h1>
       <ul className="hidden md:flex gap-8 font-semibold text-lg">
-        {["Home", "About", "Skills", "Contact"].map((item, index) => (
+        {["About", "Skills", "Contact"].map((item, index) => (
           <motion.li
             key={item}
             className="cursor-pointer hover:text-white transition-colors duration-300"
