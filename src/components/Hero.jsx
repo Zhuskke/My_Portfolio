@@ -50,7 +50,7 @@ const Hero = () => {
         </motion.p>
         <motion.div variants={fadeIn} className="flex gap-4 mt-6">
           <motion.a
-            href="#contact"
+            href="mailto:jmdejesus0807@gmail.com"
             className="px-6 py-3 rounded-full text-lg font-semibold bg-sky-400 text-indigo-950 shadow-lg hover:shadow-2xl hover:bg-sky-300 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -60,21 +60,23 @@ const Hero = () => {
         </motion.div>
         <motion.div variants={fadeIn} className="flex gap-6 mt-8">
           <motion.a
-            href="#"
+            href="https://www.linkedin.com/in/john-michael-de-jesus-956899378/"
+            target="blank"
             className="text-sky-400 hover:text-white"
             whileHover={{ scale: 1.2, rotate: 5 }}
           >
             <LucideLinkedin size={28} />
           </motion.a>
           <motion.a
-            href="#"
+            href="mailto:jmdejesus0807@gmail.com"
             className="text-sky-400 hover:text-white"
             whileHover={{ scale: 1.2, rotate: 5 }}
           >
             <LucideMail size={28} />
           </motion.a>
           <motion.a
-            href="#"
+            href="https://github.com/Zhuskke"
+            target="blank"
             className="text-sky-400 hover:text-white"
             whileHover={{ scale: 1.2, rotate: 5 }}
           >

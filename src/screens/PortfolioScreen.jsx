@@ -1,6 +1,6 @@
 import { useState } from "react";
-import BackgroundCanvas from "../components/backgroundCanvas";
-import Navbar from "../components/navbar";
+import BackgroundCanvas from "../components/BackgroundCanvas";
+import Navbar from "../components/Navbar";
 import MobileMenu from "../components/MobileMenu";
 import Hero from "../components/Hero";
 import About from "../components/About";

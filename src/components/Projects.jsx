@@ -33,13 +33,6 @@ const Projects = () => {
       ],
       tech: ["MongoDB", "Express", "React", "Node", "Tailwind", "DaisyUI"],
     },
-    {
-      title: "Battle Bot",
-      description:
-        "A robotics project focused on motor control, durability, and competitive performance.",
-      images: ["/img/projects/battle1.png", "/img/projects/battle2.png"],
-      tech: ["Arduino", "Motor Drivers", "LiPo Battery", "PCB Design"],
-    },
   ];
 
   const cardVariants = {
