@@ -60,17 +60,16 @@ const About = () => {
             A Little About Me
           </h2>
           <p className="text-lg text-indigo-100 leading-relaxed opacity-90">
-            I'm a <strong>4th-year Computer Engineering student</strong> driven
-            by a passion for the logical foundation of technology. My academic
-            journey has provided me with a strong background in{" "}
-            <b>data structures and algorithms</b>, which I apply to my true
-            passion: backend development.
+            I'm a <strong>4th-year Computer Engineering student</strong> at Holy
+            Angel University with a strong interest in backend development. My
+            academic journey has helped me build a solid foundation in backend
+            logics and APIs.
           </p>
           <p className="text-lg text-indigo-100 leading-relaxed opacity-90">
-            I specialize in building robust APIs, optimizing database
-            performance, and architecting scalable backend systems. I thrive on
-            solving intricate problems and enjoy the process of writing clean,
-            maintainable code.
+            I'm passionate about building efficient, scalable backend systems
+            and enjoy working with APIs, databases, and server-side logic. My
+            goal is to become a skilled backend developer who can build a
+            reliable, secured, and high-performance websites.
           </p>
           <div className="flex justify-center md:justify-start pt-4">
             <motion.button
