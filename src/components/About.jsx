@@ -60,10 +60,9 @@ const About = () => {
             A Little About Me
           </h2>
           <p className="text-lg text-indigo-100 leading-relaxed opacity-90">
-            I'm a <strong>4th-year Computer Engineering student</strong> at Holy
-            Angel University with a strong interest in backend development. My
-            academic journey has helped me build a solid foundation in backend
-            logics and APIs.
+            I'm a 4th-year Computer Engineering student at Holy Angel University
+            with a strong interest in backend development. My academic journey
+            has helped me build a solid foundation in backend logics and APIs.
           </p>
           <p className="text-lg text-indigo-100 leading-relaxed opacity-90">
             I'm passionate about building efficient, scalable backend systems
